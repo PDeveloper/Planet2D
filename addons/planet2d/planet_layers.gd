@@ -32,7 +32,7 @@ func _ready()->void:
 	for c in get_children():
 		if not c is PlanetLayer:
 			continue
-		layers.push_back(l as PlanetLayer)
+		layers.push_back(c as PlanetLayer)
 	update()
 
 func _process(delta):
