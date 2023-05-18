@@ -13,7 +13,7 @@ config_version=5
 config/name="Planet2D"
 run/main_scene="res://examples/demo.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
-config/icon="res://docs/terra.png"
+config/icon="res://terra.png"
 
 [editor_plugins]
 
