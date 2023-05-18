@@ -1,6 +1,6 @@
 class_name PlanetLayer extends Sprite2D
 
-const PLANET_LAYER_SHADER := preload("res://addons/planet2d/planet.gdshader")
+const PlanetLayerShader := preload("res://addons/planet2d/planet.gdshader")
 
 @export_group("Texture", "texture_")
 @export var texture_scale := Vector2(0.5, 0.5):
@@ -62,11 +62,10 @@ const PLANET_LAYER_SHADER := preload("res://addons/planet2d/planet.gdshader")
 		material.set_shader_parameter("specular_shininess", specular_shininess)
 
 func _init()->void:
-	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	
 	material = ShaderMaterial.new()
-	material.shader = PLANET_LAYER_SHADER
+	material.shader = PlanetLayerShader
 
 func _ready()->void:
 	update()

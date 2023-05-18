@@ -1,8 +1,8 @@
 [gd_scene load_steps=16 format=3 uid="uid://b5k1qj2ny2ors"]
 
-[ext_resource type="Script" path="res://addons/planet2d/PlanetLayers.gd" id="1_rinik"]
+[ext_resource type="Script" path="res://addons/planet2d/planet_layers.gd" id="1_rinik"]
 [ext_resource type="Shader" path="res://addons/planet2d/planet.gdshader" id="2_5yixq"]
-[ext_resource type="Script" path="res://addons/planet2d/PlanetLayer.gd" id="3_3ycbk"]
+[ext_resource type="Script" path="res://addons/planet2d/planet_layer.gd" id="3_3ycbk"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iyanm"]
 shader = ExtResource("2_5yixq")
