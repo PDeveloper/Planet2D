@@ -8,7 +8,7 @@ uniform vec2 texture_scale = vec2(0.5, 0.5);
 uniform vec2 texture_offset = vec2(0.0, 0.0);
 
 uniform vec3 atmosphere_color = vec3(1.0, 1.0, 1.0);
-uniform float atmosphere_intensity = 4.0;
+uniform float atmosphere_intensity = 0.0;
 
 uniform vec3 light_color = vec3(1.0, 1.0, 1.0);
 uniform vec3 light_direction = vec3(0.0, 0.0, 1.0);
@@ -16,7 +16,7 @@ uniform float light_minimum = 0.0;
 uniform float light_maximum = 1.0;
 
 uniform vec3 specular_color = vec3(1.0, 1.0, 1.0);
-uniform float specular_intensity = 0.5;
+uniform float specular_intensity = 0.1;
 uniform float specular_shininess = 1.0;
 
 float z_from_xy(vec2 vector) {

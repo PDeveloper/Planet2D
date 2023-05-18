@@ -61,13 +61,14 @@ const PLANET_LAYER_SHADER := preload("res://addons/planet2d/planet.gdshader")
 		specular_shininess = ss
 		material.set_shader_parameter("specular_shininess", specular_shininess)
 
-func _ready()->void:
+func _init()->void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	
 	material = ShaderMaterial.new()
 	material.shader = PLANET_LAYER_SHADER
-	
+
+func _ready()->void:
 	update()
 
 func update()->void:

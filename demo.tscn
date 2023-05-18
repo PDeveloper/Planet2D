@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxr2wts4y600w"]
+
+[ext_resource type="PackedScene" uid="uid://b5k1qj2ny2ors" path="res://addons/planet2d/examples/toxic_rocky.tscn" id="1_ga766"]
+
+[node name="Demo" type="Node2D"]
+
+[node name="Planet" parent="." instance=ExtResource("1_ga766")]
+position = Vector2(555, 309)
