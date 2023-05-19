@@ -1,3 +1,4 @@
+@icon("res://addons/planet2d/icons/PlanetLayers.svg")
 class_name PlanetLayers extends Node2D
 
 ## A simple container to control child [PlanetLayer] node properties should reasonably be the same for a single planet.

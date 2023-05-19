@@ -1,3 +1,4 @@
+@icon("res://addons/planet2d/icons/PlanetLayer.svg")
 class_name PlanetLayer extends Sprite2D
 
 ## A Sprite2D with a [ShaderMaterial] (using [constant PlanetLayerShader]), a spherical distort shader with additional lighting effects.
