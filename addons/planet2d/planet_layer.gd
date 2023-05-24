@@ -39,7 +39,7 @@ const PlanetLayerShader := preload("res://addons/planet2d/planet.gdshader")
 		material.set_shader_parameter("atmosphere_color", atmosphere_color)
 
 ## Controls the density of the atmosphere. At higher values, the texture itself will become invisible as it is enveloped by the atmosphere.
-@export var atmosphere_intensity := 0.1:
+@export var atmosphere_intensity := 0.0:
 	set(ai):
 		atmosphere_intensity = ai
 		material.set_shader_parameter("atmosphere_intensity", atmosphere_intensity)

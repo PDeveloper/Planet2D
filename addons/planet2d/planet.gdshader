@@ -19,6 +19,8 @@ uniform vec3 specular_color = vec3(1.0, 1.0, 1.0);
 uniform float specular_intensity = 0.1;
 uniform float specular_shininess = 1.0;
 
+uniform float fade = 1.0;
+
 float z_from_xy(vec2 vector) {
 	return sqrt(1.0 - vector.x * vector.x - vector.y * vector.y);
 }
@@ -48,5 +50,7 @@ void fragment() {
 	vec3 color = min(mix(input_color.rgb, atmosphere_color, atmospheric_density) * light_color, vec3(1.0, 1.0, 1.0));
 	
 	COLOR.rgb = color * luminosity + specular * specular_color;
-	COLOR.a = (1.0 - floor(r)) * max(atmospheric_density, input_color.a);
+	float aa = length(TEXTURE_PIXEL_SIZE) * fade;
+	float alpha_gradient = clamp((1.0 - r) / aa, 0.0, 1.0);
+	COLOR.a = alpha_gradient * max(atmospheric_density, input_color.a);
 }
