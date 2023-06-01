@@ -90,6 +90,19 @@ const PlanetLayerShader := preload("res://addons/planet2d/planet.gdshader")
 		specular_shininess = ss
 		material.set_shader_parameter("specular_shininess", specular_shininess)
 
+@export_group("Pixelize", "pixelize_")
+## Enable planet rendering pixelization
+@export var pixelize_enabled := false:
+	set(pe):
+		pixelize_enabled = pe
+		material.set_shader_parameter("pixelize_enabled", pixelize_enabled)
+
+## Resolution scale of the render output. 0.5 means each pixel is 2x larger.
+@export var pixelize_scale := 1.0:
+	set(ps):
+		pixelize_scale = ps
+		material.set_shader_parameter("pixelize_scale", pixelize_scale)
+
 func _init()->void:
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	
@@ -115,3 +128,6 @@ func update()->void:
 	material.set_shader_parameter("specular_color", specular_color)
 	material.set_shader_parameter("specular_intensity", specular_intensity)
 	material.set_shader_parameter("specular_shininess", specular_shininess)
+	
+	material.set_shader_parameter("pixelize_enabled", pixelize_enabled)
+	material.set_shader_parameter("pixelize_scale", pixelize_scale)

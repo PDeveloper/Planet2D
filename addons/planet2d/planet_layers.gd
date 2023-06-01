@@ -45,6 +45,19 @@ var layers:Array[PlanetLayer] = []
 		light_maximum = lm
 		set_parameter("light_maximum", light_maximum)
 
+@export_group("Pixelize", "pixelize_")
+## Enable planet rendering pixelization
+@export var pixelize_enabled := false:
+	set(pe):
+		pixelize_enabled = pe
+		set_parameter("pixelize_enabled", pixelize_enabled)
+
+## Resolution scale of the render output. 0.5 means each pixel is 2x larger.
+@export var pixelize_scale := 1.0:
+	set(ps):
+		pixelize_scale = ps
+		set_parameter("pixelize_scale", pixelize_scale)
+
 func _ready()->void:
 	for c in get_children():
 		if not c is PlanetLayer:
@@ -64,6 +77,9 @@ func update()->void:
 	set_parameter("light_direction", light_direction)
 	set_parameter("light_minimum", light_minimum)
 	set_parameter("light_maximum", light_maximum)
+	
+	set_parameter("pixelize_enabled", pixelize_enabled)
+	set_parameter("pixelize_scale", pixelize_scale)
 
 ## Utility method to set a property on child [PlanetLayer] nodes.
 func set_parameter(name:String, value:Variant)->void:

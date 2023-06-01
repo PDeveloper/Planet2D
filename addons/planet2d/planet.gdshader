@@ -19,7 +19,10 @@ uniform vec3 specular_color = vec3(1.0, 1.0, 1.0);
 uniform float specular_intensity = 0.1;
 uniform float specular_shininess = 1.0;
 
-uniform float fade = 1.0;
+uniform float fade = 0.0;
+
+uniform bool pixelize_enabled = false;
+uniform float pixelize_scale = 1.0;
 
 float z_from_xy(vec2 vector) {
 	return sqrt(1.0 - vector.x * vector.x - vector.y * vector.y);
@@ -27,6 +30,8 @@ float z_from_xy(vec2 vector) {
 
 void fragment() {
 	vec2 uv = (UV - vec2(0.5, 0.5)) * 2.0;
+	float resolution = (1.0 / length(TEXTURE_PIXEL_SIZE)) * pixelize_scale;
+	uv = mix(uv, round(uv * resolution) / resolution, float(pixelize_enabled));
 	float r = length(uv);
 
 	float displacement_scale = (r != 0.0 ? asin(r) / r : 0.0) / PI2;
@@ -50,7 +55,7 @@ void fragment() {
 	vec3 color = min(mix(input_color.rgb, atmosphere_color, atmospheric_density) * light_color, vec3(1.0, 1.0, 1.0));
 	
 	COLOR.rgb = color * luminosity + specular * specular_color;
-	float aa = length(TEXTURE_PIXEL_SIZE) * fade;
-	float alpha_gradient = clamp((1.0 - r) / aa, 0.0, 1.0);
+	float fade_texels = length(TEXTURE_PIXEL_SIZE) * fade;
+	float alpha_gradient = 1.0 - smoothstep(1.0 - fade_texels, 1.0, r);
 	COLOR.a = alpha_gradient * max(atmospheric_density, input_color.a);
 }

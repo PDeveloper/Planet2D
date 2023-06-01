@@ -17,6 +17,9 @@ shader_parameter/light_maximum = 1.0
 shader_parameter/specular_color = Color(1, 1, 1, 1)
 shader_parameter/specular_intensity = 0.2
 shader_parameter/specular_shininess = 1.0
+shader_parameter/fade = 1.0
+shader_parameter/pixelize_enabled = false
+shader_parameter/pixelize_scale = 1.0
 
 [sub_resource type="Gradient" id="Gradient_naw6b"]
 offsets = PackedFloat32Array(0, 0.269, 0.559, 1)
@@ -42,6 +45,9 @@ shader_parameter/light_maximum = 1.0
 shader_parameter/specular_color = Color(1, 1, 1, 1)
 shader_parameter/specular_intensity = 0.66
 shader_parameter/specular_shininess = 32.88
+shader_parameter/fade = 1.0
+shader_parameter/pixelize_enabled = false
+shader_parameter/pixelize_scale = 1.0
 
 [sub_resource type="Gradient" id="Gradient_lfdbs"]
 offsets = PackedFloat32Array(0, 0.408, 0.453)
@@ -67,9 +73,12 @@ shader_parameter/light_maximum = 1.0
 shader_parameter/specular_color = Color(1, 1, 1, 1)
 shader_parameter/specular_intensity = 0.2
 shader_parameter/specular_shininess = 1.0
+shader_parameter/fade = 1.0
+shader_parameter/pixelize_enabled = false
+shader_parameter/pixelize_scale = 1.0
 
 [sub_resource type="Gradient" id="Gradient_dm6f0"]
-offsets = PackedFloat32Array(0.356, 0.771)
+offsets = PackedFloat32Array(0.629032, 0.929032)
 colors = PackedColorArray(0.831373, 0.509804, 0.811765, 0, 0.792157, 0.360784, 0.964706, 0.894118)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ypnoy"]
@@ -120,5 +129,6 @@ texture = SubResource("NoiseTexture2D_wnm8y")
 script = ExtResource("3_3ycbk")
 texture_scale = Vector2(0.3, 0.8)
 texture_offset = Vector2(2.6761, 0)
+texture_offset_scale = 2.0
 light_direction = Vector3(0.770513, -1.34721e-07, 0.637424)
 light_minimum = 0.0
