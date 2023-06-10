@@ -33,7 +33,7 @@ func _set_generator(g:PaletteGenerator)->void:
 		generator.changed.connect(_on_generator_changed)
 
 func _set_resolution(r:int)->void:
-	pass
+	create_resolution(r)
 
 func _on_generator_changed()->void:
 	apply()

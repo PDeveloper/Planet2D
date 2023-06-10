@@ -28,34 +28,78 @@ float z_from_xy(vec2 vector) {
 	return sqrt(1.0 - vector.x * vector.x - vector.y * vector.y);
 }
 
-void fragment() {
-	vec2 uv = (UV - vec2(0.5, 0.5)) * 2.0;
-	float resolution = (1.0 / length(TEXTURE_PIXEL_SIZE)) * pixelize_scale;
-	uv = mix(uv, round(uv * resolution) / resolution, float(pixelize_enabled));
-	float r = length(uv);
+vec2 transform_uv(vec2 uv, vec2 texel) {
+	// Center uv coordinates
+	uv = (uv - vec2(0.5, 0.5)) * 2.0;
+	// Quantize UV resolution
+	vec2 resolution = (1.0 / texel) * pixelize_scale;
+	return mix(uv, round(uv * resolution) / resolution, float(pixelize_enabled));
+}
 
-	float displacement_scale = (r != 0.0 ? asin(r) / r : 0.0) / PI2;
+vec2 spherical_distort(vec2 uv) {
+	// Spherical Displacement
+	float radius = length(uv);
+	float displacement_scale = (radius != 0.0 ? asin(radius) / radius : 0.0) / PI2;
 	vec2 displacement = uv * displacement_scale;
+	return (displacement + texture_offset) * texture_scale;
+}
+
+mat3 generate_normal_matrix(vec3 normal) {
+	vec3 T = normalize(cross(normal, vec3(normal.z, -normal.y, -normal.x)));
+	vec3 B = normalize(cross(normal, T));
+	vec3 N = normal;
+	return mat3(T, B, N);
+}
+
+vec3 atmospherics(vec3 color, vec3 normal) {
+	// Atmospherics
+	float atmospheric_coefficient = 1.0 - max(dot(normal, UP), 0.0);
+	float atmospheric_density = mix(atmosphere_intensity, 1.0, atmospheric_coefficient);
 	
-	float z = z_from_xy(displacement);
-	vec3 normal = normalize(vec3(displacement, z));
+	return mix(color, atmosphere_color, atmospheric_density);
+}
+
+vec3 get_diffuse(vec3 color, vec3 normal, vec3 light_normal) {
+	// Diffuse
+	float light_dot = max(dot(normal, light_normal), 0.0);
+	float diffuse_coefficient = mix(light_minimum, light_maximum, light_dot);
+	return (color * diffuse_coefficient) * light_color;
+}
+
+vec3 get_specular(vec3 normal, vec3 light_normal, float shininess) {
+	// Specular
+	shininess = mix(1.0, specular_shininess * specular_shininess, shininess);
+	float reflect_dot = dot(reflect(-light_normal, normal), UP);
+	float specular_coefficient = specular_intensity * pow(max(0.0, reflect_dot), shininess);
+	return (specular_color * specular_coefficient) * light_color;
+}
+
+void fragment() {
+	vec2 uv = transform_uv(UV, TEXTURE_PIXEL_SIZE);
+	vec3 normal = vec3(uv, z_from_xy(uv));
+	float radius = length(uv);
+
+	vec3 light_normal = normalize(light_direction);
+
+	// Spherical Displacement
+	vec2 displaced_uv = spherical_distort(uv);
 	
-	float normal_dot = 1.0 - max(dot(normal, UP), 0.0);
-	float atmospheric_density = mix(atmosphere_intensity, 1.0, normal_dot);
+	// Get inputs from samplers
+	vec4 input_color = texture(TEXTURE, displaced_uv);
+	vec4 input_shininess = texture(SPECULAR_SHININESS_TEXTURE, displaced_uv);
+	vec3 input_normal = texture(NORMAL_TEXTURE, displaced_uv).xyz * 2.0 - 1.0;
+	input_normal.xy = -input_normal.yx;
 	
-	float light_dot = max(dot(normal, normalize(light_direction)), 0.0);
-	float luminosity = mix(light_minimum, light_maximum, light_dot);
+	// Adjust Normal to Normal Map
+	mat3 normal_matrix = generate_normal_matrix(normal);
+	normal = normal_matrix * input_normal;
 	
-	float light_reflect = dot(reflect(-normalize(light_direction), normal), UP);
-	float specular = specular_intensity * pow(max(0.0, light_reflect), specular_shininess);
+	vec3 diffuse = get_diffuse(input_color.rgb, normal, light_normal);
+	vec3 specular = get_specular(normal, light_normal, input_shininess.r);
+
+	COLOR.rgb = diffuse + specular;
 	
-	vec2 p = displacement * texture_scale + texture_offset * texture_scale;
-	
-	vec4 input_color = texture(TEXTURE, p);
-	vec3 color = min(mix(input_color.rgb, atmosphere_color, atmospheric_density) * light_color, vec3(1.0, 1.0, 1.0));
-	
-	COLOR.rgb = color * luminosity + specular * specular_color;
 	float fade_texels = length(TEXTURE_PIXEL_SIZE) * fade;
-	float alpha_gradient = 1.0 - smoothstep(1.0 - fade_texels, 1.0, r);
-	COLOR.a = alpha_gradient * max(atmospheric_density, input_color.a);
+	float alpha = 1.0 - smoothstep(1.0 - fade_texels, 1.0, radius);
+	COLOR.a = alpha * input_color.a;
 }

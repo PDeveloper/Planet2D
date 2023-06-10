@@ -106,4 +106,4 @@ func remove_layer(layer:PlanetLayer)->void:
 	if !layers.has(layer):
 		return
 	layers.erase(layer)
-	if layer.get_parent() == self: remove_child(layer)
+	remove_child(layer)
