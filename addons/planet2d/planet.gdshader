@@ -59,7 +59,7 @@ vec3 atmospherics(vec3 color, vec3 normal) {
 	return mix(color, atmosphere_color, atmospheric_density);
 }
 
-vec3 get_diffuse(vec3 color, vec3 normal, vec3 light_normal) {
+vec3 get_diffuse(vec3 normal, vec3 light_normal, vec3 color) {
 	// Diffuse
 	float light_dot = max(dot(normal, light_normal), 0.0);
 	float diffuse_coefficient = mix(light_minimum, light_maximum, light_dot);
@@ -92,12 +92,15 @@ void fragment() {
 	
 	// Adjust Normal to Normal Map
 	mat3 normal_matrix = generate_normal_matrix(normal);
-	normal = normal_matrix * input_normal;
+	vec3 displaced_normal = normal_matrix * input_normal;
 	
-	vec3 diffuse = get_diffuse(input_color.rgb, normal, light_normal);
-	vec3 specular = get_specular(normal, light_normal, input_shininess.r);
+	float light_dot = smoothstep(-0.4, 0.0, dot(normal, light_normal));
+	float global_light = mix(light_minimum, light_maximum, light_dot);
+	
+	vec3 diffuse = get_diffuse(displaced_normal, light_normal, input_color.rgb);
+	vec3 specular = get_specular(displaced_normal, light_normal, input_shininess.r);
 
-	COLOR.rgb = diffuse + specular;
+	COLOR.rgb = (diffuse + specular) * global_light;
 	
 	float fade_texels = length(TEXTURE_PIXEL_SIZE) * fade;
 	float alpha = 1.0 - smoothstep(1.0 - fade_texels, 1.0, radius);
